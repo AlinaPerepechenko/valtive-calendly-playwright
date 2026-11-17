@@ -27,8 +27,6 @@ jobs:
       run: npm ci
 
     - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+      run: npx playwright install --with-deps chromium
 
-    # Customize this step as needed
-    - name: Build application
-      run: npx run build
+    # No build step: this project is a test framework, there is nothing to build
