@@ -1,0 +1,25 @@
+{
+  "name": "valtive-calendly-playwright",
+  "version": "1.0.0",
+  "description": "Playwright + AI agents: booking Calendly slots on valtive.io, results reported to Qase",
+  "scripts": {
+    "test": "playwright test",
+    "test:one": "cross-env BOOKING_COUNT=1 playwright test tests/booking",
+    "test:40": "cross-env BOOKING_COUNT=40 playwright test tests/booking",
+    "test:headed": "playwright test --headed",
+    "test:qase": "cross-env QASE_MODE=testops playwright test tests/booking",
+    "report": "playwright show-report",
+    "agents:init": "playwright init-agents --loop=vscode",
+    "inboxes:create": "node scripts/create-inboxes.mjs 3",
+    "inboxes:list": "node scripts/list-emails.mjs",
+    "bookings:cancel": "cross-env CLEANUP=1 playwright test tests/cleanup --headed"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.5",
+    "playwright-qase-reporter": "^2.8.0",
+    "mailslurp-client": "^17.6.0"
+  },
+  "license": "ISC"
+}
