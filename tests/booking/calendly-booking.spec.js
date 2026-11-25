@@ -6,11 +6,13 @@ import { waitForAny } from '../../src/utils/waitForAny';
 
 // How many bookings to make: 1 by default, 40 for the final run (BOOKING_COUNT=40)
 const BOOKING_COUNT = Number(process.env.BOOKING_COUNT || 1);
+// First booking number: lets a run continue numbering, e.g. BOOKING_START=26 BOOKING_COUNT=15 → #26..#40
+const BOOKING_START = Number(process.env.BOOKING_START || 1);
 
 test.describe('Calendly booking via valtive.io contact page', () => {
   // booking + waiting for 2 emails (code and invitation) takes longer than 90s
   test.describe.configure({ timeout: 300_000 });
-  for (let n = 1; n <= BOOKING_COUNT; n++) {
+  for (let n = BOOKING_START; n < BOOKING_START + BOOKING_COUNT; n++) {
     const id = String(n).padStart(2, '0');
 
     test(`Booking #${id}: schedule a free 30-minute slot`, async ({

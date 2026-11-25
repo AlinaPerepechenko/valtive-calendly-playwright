@@ -21,6 +21,9 @@ jobs:
     env:
       BOOKING_COUNT: ${{ github.event.inputs.booking_count || '0' }}
       CANCEL_AFTER_TEST: 'true'
+      EMAIL_PROVIDER: ${{ secrets.TESTMAIL_API_KEY != '' && 'testmail' || '' }}
+      TESTMAIL_API_KEY: ${{ secrets.TESTMAIL_API_KEY }}
+      TESTMAIL_NAMESPACE: ${{ secrets.TESTMAIL_NAMESPACE }}
       MAILSLURP_API_KEY: ${{ secrets.MAILSLURP_API_KEY }}
       MAILSLURP_INBOX_IDS: ${{ secrets.MAILSLURP_INBOX_IDS }}
       QASE_MODE: ${{ secrets.QASE_TESTOPS_API_TOKEN != '' && 'testops' || 'off' }}

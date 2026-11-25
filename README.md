@@ -8,7 +8,7 @@ the confirmation. Results are uploaded to **Qase TMS**; tests run on **GitHub Ac
 
 1. Opens `https://valtive.io/contact/` and picks the first free slot in the Calendly iframe
    (slots already booked in this run are skipped → every booking gets a different slot).
-2. Fills the form with a **MailSlurp test inbox** email.
+2. Fills the form with a **test inbox** email (testmail.app or MailSlurp, `EMAIL_PROVIDER`).
 3. Calendly asks to verify the email → the test reads the **6-digit code** from the inbox and enters it.
 4. Verifies the confirmation page **"Your call is booked!"** / "Check your inbox for a calendar invite."
    (Calendly's own "You are scheduled" / "A calendar invitation has been sent to your email address."
@@ -24,7 +24,7 @@ the confirmation. Results are uploaded to **Qase TMS**; tests run on **GitHub Ac
 | Test framework | [Playwright Test](https://playwright.dev) (JavaScript) |
 | AI agents | [Playwright Test Agents](https://playwright.dev/docs/test-agents): planner · generator · healer |
 | Design | Page Object Model + custom fixtures |
-| Test inboxes | [MailSlurp](https://www.mailslurp.com) (verification code + invitation) |
+| Test inboxes | [testmail.app](https://testmail.app) or [MailSlurp](https://www.mailslurp.com) (verification code + invitation) |
 | Test management | [Qase](https://qase.io) via `playwright-qase-reporter` |
 | CI | GitHub Actions |
 
@@ -46,7 +46,7 @@ src/
     CancellationPage.js      # calendly.com/cancellations/<id>
   fixtures/fixtures.js       # contactPage, calendly, thankYouPage, bookingCleanup
   utils/
-    TestInbox.js             # MailSlurp: inbox per booking, code, invitation, cancel link
+    TestInbox.js             # test inboxes (testmail.app | MailSlurp): address per booking, code, invitation, cancel link
     bookingData.js           # booker data (name + test inbox email)
     SlotLedger.js            # slots booked in this run → 40 different slots
     waitForAny.js            # wait for one of several elements (main page + iframe)
@@ -96,4 +96,9 @@ Repository secrets: `MAILSLURP_API_KEY`, `MAILSLURP_INBOX_IDS`,
   The test unpins the header (`ContactPage.unpinHeader`).
 - The 6 code "boxes" are **one input** `name="verification_code"`.
 - The invitation is sent by Valtive's calendar ("Test Squad"), not by Calendly.
+- **Email capacity**: every booking needs 2 emails (code + invitation). MailSlurp's free plan stopped
+  receiving after 50 emails (25 bookings), so the inboxes were moved to **testmail.app**
+  (`EMAIL_PROVIDER=testmail`, an address per booking via tags) by changing only `TestInbox.js`.
+- Test inboxes on free plans are **temporary**: `globalSetup` checks them before the run (fail fast).
 - Bookings run **sequentially** (`workers: 1`) so tests don't compete for the same slot.
+  Final run: **40 passed in ~34 minutes** (`VIDEO=on` records every booking).

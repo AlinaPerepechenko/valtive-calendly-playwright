@@ -46,7 +46,8 @@ export default defineConfig({
     locale: 'en-US',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
+    // VIDEO=on records every test (useful as a backup for the demo video)
+    video: process.env.VIDEO || 'retain-on-failure',
   },
 
   projects: [

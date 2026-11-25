@@ -12,7 +12,8 @@
     "agents:init": "playwright init-agents --loop=vscode",
     "inboxes:create": "node scripts/create-inboxes.mjs 3",
     "inboxes:list": "node scripts/list-emails.mjs",
-    "bookings:cancel": "cross-env CLEANUP=1 playwright test tests/cleanup --headed"
+    "bookings:cancel": "cross-env CLEANUP=1 playwright test tests/cleanup --headed",
+    "inboxes:check": "node scripts/check-inboxes.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.1",
