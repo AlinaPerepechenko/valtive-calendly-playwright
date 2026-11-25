@@ -48,16 +48,15 @@ test.describe('Calendly booking via valtive.io contact page', () => {
 
       // After "Schedule Event" Calendly shows one of:
       //  - "Verify your email" (6-digit code)  - security block  - success
-      await waitForAny([
-        calendly.verifyEmailHeading,
-        calendly.bookingBlocked,
-        calendly.scheduledHeading,
-        thankYouPage.heading,
-      ]);
+      await waitForAny(
+        [calendly.verifyEmailHeading, calendly.bookingBlocked, calendly.scheduledHeading, thankYouPage.heading],
+        30_000,
+        'Wait for Calendly result: code / block / confirmation'
+      );
 
       await expect(
         calendly.bookingBlocked,
-        'Calendly security check blocked the booking ("This booking cannot be completed")'
+        'No Calendly security block ("This booking cannot be completed")'
       ).toBeHidden();
 
       if (await calendly.verifyEmailHeading.isVisible()) {
@@ -72,7 +71,7 @@ test.describe('Calendly booking via valtive.io contact page', () => {
         // Valtive redirects to its own thank-you page after a booking.
         // Calendly's own texts ("You are scheduled", "A calendar invitation has been
         // sent to your email address.") are checked when Calendly shows them instead.
-        await waitForAny([thankYouPage.heading, calendly.scheduledHeading]);
+        await waitForAny([thankYouPage.heading, calendly.scheduledHeading], 30_000, 'Wait for the confirmation page');
 
         if (page.url().includes('/thank-you/')) {
           await expect(thankYouPage.heading).toBeVisible();
