@@ -49,6 +49,26 @@ export class CalendlyWidget {
     this.bookingBlocked = root.getByText('This booking cannot be completed');
   }
 
+  /**
+   * Shows the first month that has free days (turns the calendar forward if needed).
+   * Returns false if none of the next `maxMonths` months has a free day.
+   * Needed because our own bookings can fill the current month completely.
+   */
+  async goToMonthWithFreeDays(maxMonths = 4) {
+    await this.waitForCalendar();
+    for (let month = 0; month < maxMonths; month++) {
+      const found = await this.availableDays
+        .first()
+        .waitFor({ timeout: 10_000 })
+        .then(() => true)
+        .catch(() => false);
+      if (found) return true;
+      await this.nextMonthButton.click();
+      await this.anyDay.first().waitFor();
+    }
+    return false;
+  }
+
   async waitForCalendar() {
     await this.title.waitFor();
     await this.anyDay.first().waitFor(); // availability is loaded asynchronously

@@ -14,7 +14,8 @@ test.describe('Contact page', () => {
   });
 
   test('shows the Calendly scheduler with free days', async ({ calendly }) => {
-    await calendly.waitForCalendar();
+    // the current month can be fully booked, so look ahead up to 4 months
+    expect(await calendly.goToMonthWithFreeDays(), 'a month with free days').toBe(true);
     await expect(calendly.title).toBeVisible();
     await expect(calendly.availableDays.first()).toBeVisible();
   });
